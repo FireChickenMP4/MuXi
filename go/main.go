@@ -1,31 +1,39 @@
 package main
 
-import (
-	"fmt"
-)
-
-type intlinklist struct {
-	nextaddress *intlinklist
-	value       int
-}
+import "fmt"
 
 func main() {
-	var x, y, z intlinklist
-	x.nextaddress = &y
-	y.nextaddress = &z
-	z.nextaddress = nil
-	x.value = 1
-	y.value = 2
-	z.value = 3
-	var a *intlinklist = &x
-	for {
-		fmt.Println(a.value)
-		if a.nextaddress == nil {
-			break
-		} else {
-			a = a.nextaddress
-		}
+	x := []int{1, 2, 3}
+	y := x[1:] //2之后 2 3
+	y = append(y, 4)
+	for _, val := range x {
+		fmt.Println(val) //输出1 2 3 而没有4
 	}
-	//go的结构体a.value自动就等价于c中的a->value或者说(*a).value
-	//相当于简化了
+	fmt.Print("\n")
+	for _, val := range y {
+		fmt.Println(val) //输出2 3 4 而没有1
+	}
+	fmt.Print("\n")
+	//因为append在cap不够会自动扩容，导致y指向新的底层数组
+	//这过程中只是数据的拷贝
+	a := make([]int, 3, 5)
+	a[0] = 1
+	a[1] = 2
+	a[2] = 3
+	b := a[1:3]
+	b = append(b, 4)
+	fmt.Println(a)
+	fmt.Print("\n")
+	fmt.Println(b)
+	fmt.Print("\n")
+	//此时append容量是足够的，所以a,b仍然是同一个底层数组
+	//但是a却还是123，是因为len此时是3，如果将a扩展到4就可以看到了
+	aex := a[:4]
+	fmt.Println(aex)
+	/*[1 2 3]
+
+	[2 3 4]
+
+	[1 2 3 4]
+	*/
 }
