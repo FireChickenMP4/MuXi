@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"sync"
-	"text/template"
+	//还有个text/template 这个更适合处理非html的内容或处理已确认安全的数据
+	//html版本具备强大的上下文感知能力和自动转义机制
+	//能有效防止 XSS 攻击
 )
 
 type user struct {
