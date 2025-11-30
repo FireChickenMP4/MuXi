@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+
+    <script type="text/javascript">
+      !(function (t, e, n, a, i) {
+        var c = "__ty_web_inject_guard",
+          o = "__ty_web_tpl_guard",
+          r = "https:",
+          d = "http:",
+          s = "//";
+        function _() {
+          var t = [].slice.call(arguments);
+          _.q.push(t);
+        }
+        function g(t) {
+          var e,
+            a = "tingyun_agent",
+            i = n.getElementsByTagName("head")[0];
+          !n.getElementById(a) &&
+            i &&
+            (((e = n.createElement("script")).id = a),
+            (e.async = !0),
+            (e.crossorigin = "anonymous"),
+            (e.src = t),
+            i.appendChild(e));
+        }
+        try {
+          if (!e[o]) {
+            (_.q = []), (e[a] = _), (e.TINGYUN_COOKIE_VALUE = n.cookie);
+            var u = "TINGYUN_DATA=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+            (n.cookie = u), (n.cookie = "".concat(u, "path=/")), (e[o] = !0);
+          }
+          if (!e[c])
+            if (!/(MSIE [0-6].\\d+)/.test(e.navigator.userAgent)) {
+              var h = {};
+              t(h);
+              var f,
+                p,
+                y = h.config || {};
+              try {
+                f = e.location.protocol;
+              } catch (E) {}
+              var l = y.addr;
+              if (
+                (l
+                  ? (p = f === r ? l.https : f === d ? l.http : l.other)
+                  : 0 !== (p = i || "").indexOf(r + s) &&
+                    0 !== p.indexOf(d + s) &&
+                    (0 === p.indexOf(s) && (p = p.substring(2)),
+                    p && (f !== r && f !== d && (f = r), (p = f + s + p))),
+                p)
+              )
+                n.getElementsByTagName("head")[0]
+                  ? (g(p), (e[c] = !0))
+                  : e.addEventListener &&
+                    (e.addEventListener("DOMContentLoaded", function () {
+                      try {
+                        g(p);
+                      } catch (E) {}
+                    }),
+                    (e[c] = !0));
+            }
+        } catch (E) {}
+      })(
+        function (ty_tpl) {},
+        window,
+        document,
+        "TingyunWeb",
+        "tingyun.ccnu.edu.cn/brs/js/7OmILag6rl4.js"
+      );
+    </script>
+    <script type="text/javascript">
+      window.TingyunWeb("init", {
+        domain: "tingyun.ccnu.edu.cn/brs",
+        token: "2af9dd79f3444e709bb4c40908ce4c18",
+        key: "7OmILag6rl4",
+        id: "4Nl_NnGbjwY",
+        plugins: ["TingyunPluginRecord"],
+        replay: {
+          enabled: true,
+          sampleRate: 1.0,
+        },
+      });
+    </script>
+
+    <title>统一身份认证服务</title>
+
+    <link rel="stylesheet" href="/cas/css/cas.css" />
+    <link rel="icon" href="/cas/favicon.ico" type="image/x-icon" />
+    <link href="./css/addstyle.css" rel="stylesheet" />
+    <link href="./css/base.css" rel="stylesheet" />
+
+    <!--[if lt IE 9]>
+      <script
+        src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js"
+        type="text/javascript"
+      ></script>
+    <![endif]-->
+  </head>
+  <body id="cas">
+    <div id="container">
+      <div id="content">
+        <div class="title"></div>
+        <div class="logo">
+          <img id="img1" src="./images/main1-logo.png" />
+
+          <div>
+            <div class="box" id="login">
+              <form
+                id="fm1"
+                action="/cas/login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page="
+                method="post"
+              >
+                <h2>
+                  请输入您的用户名和密码.
+                  <a style="color: red" href="help.html" target="_blank"
+                    >新用户帮助</a
+                  >
+                </h2>
+
+                <section class="row">
+                  <label for="username">用户名:</label>
+
+                  <input
+                    id="username"
+                    name="username"
+                    class="required"
+                    tabindex="1"
+                    accesskey="n"
+                    type="text"
+                    value="2025211351,774317r19580423X"
+                    size="25"
+                    autocomplete="off"
+                  />
+                </section>
+
+                <section class="row">
+                  <label for="password">密　码:</label>
+
+                  <input
+                    id="password"
+                    name="password"
+                    class="required"
+                    tabindex="2"
+                    accesskey="p"
+                    type="password"
+                    value=""
+                    size="25"
+                    autocomplete="off"
+                  />
+                </section>
+
+                <section class="row check">
+                  <label for="warn">请输入信息门户账号与密码。</label>
+                </section>
+
+                <section class="row btn-row">
+                  <input
+                    type="hidden"
+                    name="lt"
+                    value="LT-1440554-v2TMJ9HzoAQlQcdsRqXGMcev32jvGm-account.ccnu.edu.cn"
+                  />
+                  <input type="hidden" name="execution" value="e1s2" />
+                  <input type="hidden" name="_eventId" value="submit" />
+
+                  <input
+                    class="btn-submit"
+                    name="submit"
+                    accesskey="l"
+                    value="登录"
+                    tabindex="4"
+                    type="submit"
+                  />
+                  <input
+                    class="btn-reset"
+                    accesskey="c"
+                    name="resetpass"
+                    type="button"
+                    tabindex="5"
+                    value="忘记密码"
+                    onclick="window.location='https://selfservice.ccnu.edu.cn/account/resetpass.jsf'"
+                  />
+                </section>
+              </form>
+              <div id="pc_qrcode" class="pc_sign_in_box">
+                <div class="pc_sign_in_cont">
+                  <div class="pc_qr_code"></div>
+                  <div id="result">微信扫码登录</div>
+                </div>
+                <input type="hidden" id="servicestr" />
+              </div>
+            </div>
+            <!-- logoform end -->
+          </div>
+        </div>
+        <!-- 39main-logo -->
+        <div id="sidebar">
+          <div class="sidebar-content">
+            <p>
+              出于安全考虑，一旦您访问过那些需要您提供凭证信息的应用时，请操作完成
+              之后关闭浏览器。
+            </p>
+
+            <div id="list-languages">
+              <h3>Languages:</h3>
+
+              <ul>
+                <li class="first">
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=en"
+                    >English</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=es"
+                    >Spanish</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=fr"
+                    >French</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=ru"
+                    >Russian</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=nl"
+                    >Nederlands</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=sv"
+                    >Svenska</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=it"
+                    >Italiano</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=ur"
+                    >Urdu</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=zh_CN"
+                    >Chinese (Simplified)</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=zh_TW"
+                    >Chinese (Traditional)</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=de"
+                    >Deutsch</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=ja"
+                    >Japanese</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=hr"
+                    >Croatian</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=cs"
+                    >Czech</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=sl"
+                    >Slovenian</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=ca"
+                    >Catalan</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=mk"
+                    >Macedonian</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=fa"
+                    >Farsi</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=ar"
+                    >Arabic</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=pt_PT"
+                    >Portuguese</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=pt_BR"
+                    >Portuguese (Brazil)</a
+                  >
+                </li>
+                <li class="last">
+                  <a
+                    href="login?service=http://kjyy.ccnu.edu.cn/loginall.aspx?page=&locale=pl"
+                    >Polish</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <!-- End list-languages  -->
+          </div>
+          <!-- End sidebar-content  -->
+        </div>
+        <!-- End sidebar  -->
+      </div>
+
+      <footer>
+        <div id="copyright">
+          <p>
+            Copyright &copy; 2017 - 2021 华中师范大学信息化办公室 技术支持 PZ
+            Tech.
+          </p>
+        </div>
+      </footer>
+    </div>
+    <!-- END #container -->
+
+    <script type="text/javascript" src="/cas/js/jquery.min.js"></script>
+
+    <script type="text/javascript" src="/cas/js/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="/cas/js/cas.js"></script>
+
+    <script type="text/javascript" src="/cas/js/jquery.qrcode.js"></script>
+
+    <script type="text/javascript" src="/cas/js/utf.js"></script>
+
+    <script type="text/javascript" src="/cas/js/v5.js"></script>
+  </body>
+  <script type="text/javascript">
+    var websocket = null;
+    var pid = uuid();
+    var servicestr = GetQueryValue("service");
+    document.getElementById("servicestr").value = servicestr;
+
+    !(function () {
+      //console.log(pid);
+      var content =
+        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7219d601c7041b7a&redirect_uri=https%3a%2f%2faccount.ccnu.edu.cn%2fqrcode%2fweixin%3fpid%3d";
+      content = content.concat(
+        pid,
+        "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect"
+      );
+      //console.log(content);
+      $(".pc_qr_code").qrcode({
+        render: "canvas",
+        width: 200,
+        height: 200,
+        correctLevel: 0,
+        text: content,
+        background: "#ffffff",
+        foreground: "black",
+        src: "image/qrcode_logo.jpg",
+      });
+    })();
+
+    //设置cookie
+    function setCookie(cname, cvalue, expireTime) {
+      var d = new Date();
+      d.setTime(d.getTime() + expireTime);
+      //设置过期时间
+      var expires = "expires=" + d.toUTCString();
+      var path = "path=/";
+      document.cookie = cname + "=" + cvalue + "; " + expires + "; " + path;
+    }
+
+    function GetQueryValue(queryName) {
+      var query = decodeURI(window.location.search.substring(1));
+      var vars = query.split("&");
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == queryName) {
+          return pair[1];
+        }
+      }
+      return null;
+    }
+
+    if ("WebSocket" in window) {
+      websocket = new WebSocket(
+        "wss://account.ccnu.edu.cn/qrcode/ws?pid=" + pid
+      );
+    } else {
+      alert("当前浏览器不支持扫码登录，推荐新版chrome浏览器访问！");
+    }
+
+    websocket.onerror = function () {
+      alert("服务器连接发生错误");
+    };
+
+    websocket.onopen = function () {};
+
+    websocket.onmessage = function (event) {
+      if (event.data != null) {
+        if (event.data == "scaned") {
+          document.getElementById("result").innerHTML =
+            "扫描成功，请在微 信中点击确认即可登录！";
+        } else {
+          websocket.close();
+          var sstr = document.getElementById("servicestr").value;
+          window.location.href =
+            "AutoLogin?st=" + event.data + "&type=scan&service=" + sstr;
+        }
+      }
+    };
+
+    websocket.onclose = function () {};
+
+    window.onbeforeunload = function () {
+      closeWebSocket();
+    };
+
+    function closeWebSocket() {
+      websocket.close();
+    }
+  </script>
+  <script>
+    // Initialize the agent at application startup.
+    // If you're using an ad blocker or Brave/Firefox, this import will not work.
+    // Please use the NPM package instead: https://t.ly/ORyXk  https://openfpcdn.io/fingerprintjs/v5
+    const fpPromise = import("/cas/js/v5.js").then((FingerprintJS) =>
+      FingerprintJS.load()
+    );
+
+    // Get the visitor identifier when you need it.
+    fpPromise
+      .then((fp) => fp.get())
+      .then((result) => {
+        // This is the visitor identifier:
+        const visitorId = result.visitorId;
+        console.log(visitorId);
+      });
+  </script>
+</html>
