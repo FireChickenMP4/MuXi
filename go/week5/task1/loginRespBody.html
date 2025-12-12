@@ -1250,7 +1250,7 @@
             //检查微信绑定
             if ("0" == "1" && pro.isLogin() && !pro.acc.msn) {
             var qr = '';
-            var img = "<span>请使用微信扫二维码，绑定微信</span><div class='dft_qr_code'><img alt='' style='width:200px;height:200px;' src='" + qr + (qr.indexOf('?') < 0 ? "?" : "&") + "ID=" + pro.acc.id + "&session=412483685'/></div>";
+            var img = "<span>请使用微信扫二维码，绑定微信</span><div class='dft_qr_code'><img alt='' style='width:200px;height:200px;' src='" + qr + (qr.indexOf('?') < 0 ? "?" : "&") + "ID=" + pro.acc.id + "&session=2750612328'/></div>";
             uni.msgBox(img, "微信绑定", function () { pro.j.lg.initAcc(function () { if (!pro.acc.msn) { location.reload(); } else { uni.msgBox("绑定微信成功"); } }); });
         }
             //检查联系方式信息
