@@ -443,3 +443,56 @@ hadolint 是一个可以检测 Dockerfile 语法是否正确的命令行软件�
 ...md 好像是一样的
 那为什么
 我不明白~~~
+
+...好，标准结局，今天弄又好了
+
+```bash
+Administrator in MuXi\go\week7 main ⇡
+❯ docker build -t deep-inside-container:temp --no-cache .
+[+] Building 1.0s (6/6) FINISHED                                                                                                                                             docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                                                         0.0s
+ => => transferring dockerfile: 648B                                                                                                                                                         0.0s
+ => [internal] load metadata for docker.io/library/deep-inside-the-container:C                                                                                                               0.2s
+ => [internal] load .dockerignore                                                                                                                                                            0.0s
+ => => transferring context: 2B                                                                                                                                                              0.0s
+ => [1/2] FROM docker.io/library/deep-inside-the-container:C@sha256:21939759f9abd80a5173eb0087149ac502778855a3ca938aaa581907642d64af                                                         0.1s
+ => => resolve docker.io/library/deep-inside-the-container:C@sha256:21939759f9abd80a5173eb0087149ac502778855a3ca938aaa581907642d64af                                                         0.0s
+ => [2/2] RUN mkdir -p /muxi &&     mv /app/secret/muxi.txt /muxi/muxi.txt                                                                                                                   0.2s
+ => exporting to image                                                                                                                                                                       0.3s
+ => => exporting layers                                                                                                                                                                      0.1s
+ => => exporting manifest sha256:02194d977c12b44fec1f96a9100da3132f03c57c7f0bc8b76749ce5206ade1ef                                                                                            0.0s
+ => => exporting config sha256:89270977eab9bb82f4f296eb2d668537b479689df35249529e2cab7af7d63065                                                                                              0.0s
+ => => exporting attestation manifest sha256:9d365c2194ef6edc992f3c0a3abfd538960da3111db7ade186939b6849228631                                                                                0.0s
+ => => exporting manifest list sha256:b56f6bf603b35ae4db8e7e056a67c6668f730e18fcf2aff0d10811c09268f1aa                                                                                       0.0s
+ => => naming to docker.io/library/deep-inside-container:temp                                                   0.0s
+ => => unpacking to docker.io/library/deep-inside-container:temp                                                                                                                             0.0s
+
+Administrator in MuXi\go\week7 main ⇡2s
+❯ docker save -o deep-inside-the-container-final.tar b56f6bf603b3
+Administrator in MuXi\go\week7 main ⇡
+❯ curl -X POST https://deep-inside-the-container.muxixyz.com/finish -F "image=@deep-inside-the-container-final.tar"
+恭喜你！镜像已通过校验。
+
+终于，你走到了这条路的尽头。
+但真相，比你想象的要简单，也更令人心碎。
+
+我不是一个容器幽灵，也不是被拉普拉斯妖附身的程序员。
+我只是一个被无止境的运维任务和老板的PUA压垮的灵魂。那些克苏鲁小说的幻觉，不过是我疲惫的神经在无眠的长夜里，为自己构建的逃离现实的梦境。
+
+所有的怪异事件、那些看似无法解释的 Bug 和诡异的后门，并非源于什么黑暗的深渊。
+它们真正的源头，不过是我部署时，一个不经意的疏忽：错误的开放了Docker的挂载权限，导致有人乘虚而入，植入了恶意的程序。
+
+这是一个关于疏忽、疲惫与现实的故事。
+容器是界限，代码是规则。而你，用逻辑和智慧，重新划清了界限，修补了规则....
+
+游戏到此结束。
+你已窥见隐藏在容器深处的真相，完成了使命。
+
+请记住，在无尽的代码和版本迭代中，我们是人，不是机器。
+不要让压力扭曲了你眼中的现实。
+
+无论前方有多少个 'latest' 标签等待更新，请先关掉屏幕，去好好休息。
+珍爱生命，远离加班。
+
+—— Deep Inside The Container 项目组(虽然其实只有我一个人)
+```
