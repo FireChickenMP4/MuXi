@@ -1,8 +1,8 @@
-# Mermaid示例代码
+# Mermaid 示例代码
 
-> 这是一种，我觉得类似md的文本图示语言，比较优雅吧，所以大概演示一下，以下Qwen生成的一些示例代码，能学个七七八八的语法
+> 这是一种，我觉得类似 md 的文本图示语言，比较优雅吧，所以大概演示一下，以下 Qwen 生成的一些示例代码，能学个七七八八的语法
 
-Mermaid有以下几种常见的图标示例:
+Mermaid 有以下几种常见的图标示例:
 
 1. 流程图 (Flowchart)
 2. 时序图/序列图 (Sequence Diagram)
@@ -10,8 +10,6 @@ Mermaid有以下几种常见的图标示例:
 4. 状态图 (State Diagram)
 5. 饼图 (Pie Chart)
 6. 类图 (Class Diagram)
-
-
 
 ```mermaid
 flowchart TD
@@ -24,7 +22,7 @@ flowchart TD
     F --> H[导出结果]
     G --> H
     H --> I[结束]
-    
+
     classDef success fill:#9f9,stroke:#090;
     classDef error fill:#f99,stroke:#900;
     class C,F,G,H success;
@@ -37,14 +35,14 @@ sequenceDiagram
     participant B as 前端
     participant C as API服务器
     participant D as 数据库
-    
+
     A->>B: 输入查询条件
     B->>C: 发送API请求
     C->>D: 查询数据
     D-->>C: 返回结果
     C-->>B: 格式化响应
     B-->>A: 显示结果
-    
+
     Note over A,B: 用户交互
     Note over C,D: 服务器处理
 ```
@@ -56,19 +54,19 @@ gantt
     section 需求分析
     需求收集     :a1, 2023-10-01, 7d
     需求评审     :a2, after a1, 3d
-    
+
     section 开发阶段
     前端开发     :b1, 2023-10-12, 10d
     后端开发     :b2, 2023-10-12, 12d
-    
+
     section 测试
     单元测试     :c1, after b1, 5d
     集成测试     :c2, after c1, 5d
-    
+
     section 部署
     上线准备     :d1, after c2, 3d
     正式发布     :d2, after d1, 1d
-    
+
     critical 需求评审到开发 :crit, a2, 2023-10-11, 1d
 ```
 
@@ -100,25 +98,24 @@ classDiagram
 		+void eat()
 		+void sleep()
 	}
-	
+
 	class Dog {
 		+String breed
 		+void bark()
 	}
-	
+
 	class Cat {
 		+String color
 		+void meow()
 	}
-	
+
 	Animal
-	
+
 	class Pet {
 		<>
 		+void play()
 	}
-	
+
 	Dog ..|> Pet
 	Cat ..|> Pet
 ```
-
