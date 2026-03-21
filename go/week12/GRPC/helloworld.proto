@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package helloworld;
+option go_package = "./helloworld";
+
+//定义响应
+message HelloRequest {
+    string name = 1;
+}
+
+//定义请求
+message HelloReply {
+    string message = 1;
+}
+
+//定义服务
+service Greeter {
+    //定义SayHello方法
+    rpc SayHello (HelloRequest) returns (HelloReply);
+}
