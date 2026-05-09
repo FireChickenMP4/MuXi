@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package api.user.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "hello-world/api/user/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.user.v1";
+
+// UserService 用户登录注册接口。
+service User {
+	rpc Register (RegisterRequest) returns (RegisterReply) {
+		option (google.api.http) = {
+			post: "/v1/users/register"
+			body: "*"
+		};
+	}
+
+	rpc Login (LoginRequest) returns (LoginReply) {
+		option (google.api.http) = {
+			post: "/v1/users/login"
+			body: "*"
+		};
+	}
+
+	rpc GetProfile (GetProfileRequest) returns (GetProfileReply) {
+		option (google.api.http) = {
+			get: "/v1/users/me"
+		};
+	}
+
+	rpc UpdateProfile (UpdateProfileRequest) returns (UpdateProfileReply) {
+		option (google.api.http) = {
+			put: "/v1/users/me"
+			body: "*"
+		};
+	}
+}
+
+message UserInfo {
+	int64 id = 1;
+	string username = 2;
+	string email = 3;
+	string mobile = 4;
+	string avatar = 5;
+	int64 created_at = 6;
+	int64 updated_at = 7;
+}
+
+message RegisterRequest {
+	string username = 1;
+	string password = 2;
+	string email = 3;
+	string mobile = 4;
+}
+
+message RegisterReply {
+	UserInfo user = 1;
+	string token = 2;
+}
+
+message LoginRequest {
+	string account = 1; // 用户名 / 邮箱 / 手机号
+	string password = 2;
+}
+
+message LoginReply {
+	UserInfo user = 1;
+	string token = 2;
+}
+
+message GetProfileRequest {}
+
+message GetProfileReply {
+	UserInfo user = 1;
+}
+
+message UpdateProfileRequest {
+	string username = 1;
+	string email = 2;
+	string mobile = 3;
+	string avatar = 4;
+}
+
+message UpdateProfileReply {
+	UserInfo user = 1;
+}
