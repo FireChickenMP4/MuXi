@@ -42,19 +42,35 @@ func main() {
 
 	mongoRepo := mongorepo.NewRepo(mongoClient, cfg.MongoDB)
 	mongoHandler := handler.New(mongoRepo)
-	mux.Handle("/api/mongo/", http.StripPrefix("/api/mongo", mongoHandler))
+	mux.Handle("/api/mongo/", cors(http.StripPrefix("/api/mongo", mongoHandler)))
 
 	pgRepo := pgrepo.NewRepo(pgDB)
 	pgHandler := handler.New(pgRepo)
-	mux.Handle("/api/pg/", http.StripPrefix("/api/pg", pgHandler))
+	mux.Handle("/api/pg/", cors(http.StripPrefix("/api/pg", pgHandler)))
+
+	mux.Handle("/", cors(http.FileServer(http.Dir("."))))
 
 	addr := fmt.Sprintf(":%s", cfg.ServerPort)
 	log.Printf("Server starting on %s", addr)
+	log.Printf("  Frontend:     http://localhost%s/", addr)
 	log.Printf("  MongoDB API:  http://localhost%s/api/mongo/posts", addr)
 	log.Printf("  PostgreSQL API: http://localhost%s/api/pg/posts", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}
+}
+
+func cors(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 func connectMongo(uri string) (*mongo.Client, error) {

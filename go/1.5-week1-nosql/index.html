@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NoSQL 帖子管理</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-400: #94a3b8;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+  --slate-50: #f8fafc;
+  --teal: #14b8a6;
+  --teal-hover: #0d9488;
+  --teal-light: rgba(20,184,166,0.1);
+  --rose: #f43f5e;
+  --amber: #f59e0b;
+  --blue: #3b82f6;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+  background: var(--slate-50);
+  color: var(--navy);
+  min-height: 100vh;
+}
+/* Header */
+.header {
+  background: var(--navy);
+  color: white;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+.db-tabs {
+  display: flex;
+  background: var(--slate-800);
+  border-radius: 8px;
+  padding: 3px;
+}
+.db-tab {
+  padding: 5px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--slate-400);
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+.db-tab.active {
+  background: var(--teal);
+  color: white;
+}
+.db-tab:hover:not(.active) { color: var(--slate-200); }
+.header-actions { display: flex; gap: 8px; }
+.btn {
+  padding: 7px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.btn-primary { background: var(--teal); color: white; }
+.btn-primary:hover { background: var(--teal-hover); transform: translateY(-1px); }
+.btn-outline {
+  background: transparent;
+  color: var(--slate-400);
+  border: 1px solid var(--slate-600);
+}
+.btn-outline:hover { color: white; border-color: var(--slate-400); }
+.btn-sm { padding: 4px 12px; font-size: 12px; }
+.btn-rose { background: var(--rose); color: white; }
+.btn-rose:hover { opacity: 0.9; }
+.btn-amber { background: var(--amber); color: white; }
+/* Layout */
+.layout { display: flex; height: calc(100vh - 60px); }
+/* Sidebar */
+.sidebar {
+  width: 340px;
+  min-width: 340px;
+  background: white;
+  border-right: 1px solid var(--slate-200);
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--slate-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sidebar-header h2 { font-size: 14px; font-weight: 600; color: var(--slate-600); text-transform: uppercase; letter-spacing: 0.5px; }
+.post-count { font-size: 12px; color: var(--slate-400); background: var(--slate-100); padding: 2px 10px; border-radius: 10px; }
+.post-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+.post-list:empty::after {
+  content: '暂无帖子';
+  display: block;
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--slate-400);
+  font-size: 14px;
+}
+.post-card {
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.post-card:hover { background: var(--slate-50); }
+.post-card.active {
+  background: var(--teal-light);
+  border-color: var(--teal);
+}
+.post-card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.post-card-meta { font-size: 12px; color: var(--slate-400); display: flex; gap: 12px; }
+.post-card-ext { font-size: 11px; color: var(--teal); margin-top: 4px; }
+/* Main content */
+.main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: var(--slate-50);
+}
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--slate-400);
+  gap: 12px;
+}
+.welcome-icon { font-size: 48px; opacity: 0.3; }
+.welcome h3 { font-size: 18px; font-weight: 600; color: var(--slate-600); }
+.welcome p { font-size: 14px; }
+/* Post detail */
+.post-detail { max-width: 720px; }
+.post-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+.post-meta {
+  font-size: 13px;
+  color: var(--slate-400);
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--slate-200);
+}
+.post-content {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--slate-700);
+  margin-bottom: 20px;
+}
+.post-extensions {
+  background: white;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--slate-200);
+}
+.post-extensions h4 { font-size: 12px; text-transform: uppercase; color: var(--slate-400); letter-spacing: 0.5px; margin-bottom: 8px; }
+.post-ext-json { font-family: 'JetBrains Mono', monospace; font-size: 12px; white-space: pre-wrap; color: var(--slate-600); }
+.post-actions { display: flex; gap: 8px; margin-bottom: 24px; }
+/* Comments */
+.comments-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.comment-count { font-size: 13px; color: var(--slate-400); font-weight: 400; }
+.comment {
+  background: white;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  border: 1px solid var(--slate-100);
+}
+.comment-nested { margin-left: 24px; border-left: 2px solid var(--teal); }
+.comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.comment-author { font-size: 13px; font-weight: 600; }
+.comment-replyto { font-size: 12px; color: var(--slate-400); }
+.comment-replyto::before { content: '@'; }
+.comment-time { font-size: 11px; color: var(--slate-400); }
+.comment-body { font-size: 14px; line-height: 1.6; color: var(--slate-700); margin-bottom: 8px; }
+.comment-actions { display: flex; gap: 8px; }
+.comment-empty {
+  text-align: center;
+  padding: 32px;
+  color: var(--slate-400);
+  font-size: 14px;
+}
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: white;
+  border-radius: 16px;
+  width: 520px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+.modal-header {
+  padding: 20px 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h2 { font-size: 18px; font-weight: 600; }
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--slate-400);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.modal-close:hover { background: var(--slate-100); }
+.modal-body { padding: 20px 24px; }
+.modal-footer {
+  padding: 0 24px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--slate-600);
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--slate-200);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border 0.2s;
+  outline: none;
+}
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.form-group .hint { font-size: 11px; color: var(--slate-400); margin-top: 4px; }
+.tag-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  background: var(--teal-light);
+  color: var(--teal-hover);
+  border-radius: 12px;
+  font-size: 12px;
+}
+.tag-chip .remove { cursor: pointer; font-size: 14px; line-height: 1; }
+.tag-chip .remove:hover { color: var(--rose); }
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 300;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-lg);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: var(--teal); }
+.toast.error { background: var(--rose); }
+/* Skeleton loading */
+.skeleton { background: linear-gradient(90deg, var(--slate-100) 25%, var(--slate-200) 50%, var(--slate-100) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--slate-400); }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>NoSQL 帖子管理</h1>
+    <div class="db-tabs">
+      <button class="db-tab active" data-db="mongo">MongoDB</button>
+      <button class="db-tab" data-db="pg">PostgreSQL</button>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary" onclick="openCreatePost()">+ 发帖</button>
+    <button class="btn btn-outline" onclick="refreshPosts()">刷新</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>帖子列表</h2>
+      <span class="post-count" id="postCount">0</span>
+    </div>
+    <div class="post-list" id="postList"></div>
+  </div>
+
+  <div class="main" id="mainContent">
+    <div class="welcome">
+      <div class="welcome-icon">~</div>
+      <h3>选择一个帖子</h3>
+      <p>从左侧列表选择一个帖子查看详情，或点击「发帖」创建新帖子</p>
+    </div>
+  </div>
+</div>
+
+<!-- Create/Edit Post Modal -->
+<div class="modal-overlay" id="postModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="postModalTitle">发帖</h2>
+      <button class="modal-close" onclick="closeModal('postModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>标题</label>
+        <input id="postTitle" placeholder="输入帖子标题">
+      </div>
+      <div class="form-group">
+        <label>作者</label>
+        <input id="postAuthor" placeholder="你的名字">
+      </div>
+      <div class="form-group">
+        <label>内容</label>
+        <textarea id="postContent" placeholder="写点什么..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>扩展字段 (JSON)</label>
+        <textarea id="postExtensions" placeholder='{"tags":["go"],"location":"Beijing"}' style="min-height:60px;font-family:'JetBrains Mono',monospace;font-size:12px"></textarea>
+        <div class="hint">可选 JSON 对象，可自定义任意字段</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('postModal')">取消</button>
+      <button class="btn btn-primary" id="postSubmitBtn" onclick="submitPost()">发布</button>
+    </div>
+  </div>
+</div>
+
+<!-- Comment Modal -->
+<div class="modal-overlay" id="commentModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="commentModalTitle">回复</h2>
+      <button class="modal-close" onclick="closeModal('commentModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>作者</label>
+        <input id="commentAuthor" placeholder="你的名字">
+      </div>
+      <div class="form-group">
+        <label>内容</label>
+        <textarea id="commentContent" placeholder="写回复..."></textarea>
+      </div>
+      <div id="commentReplyInfo" style="font-size:13px;color:var(--slate-400);margin-bottom:12px;padding:8px 12px;background:var(--slate-50);border-radius:8px;display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('commentModal')">取消</button>
+      <button class="btn btn-primary" onclick="submitComment()">回复</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const BASE = '';
+let currentDB = 'mongo';
+let posts = [];
+let currentPostId = null;
+let replyingTo = null; // { id, author } or null for root comment
+
+// Initialize
+document.querySelectorAll('.db-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.db-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentDB = tab.dataset.db;
+    currentPostId = null;
+    refreshPosts();
+    document.getElementById('mainContent').innerHTML = `
+      <div class="welcome">
+        <div class="welcome-icon">~</div>
+        <h3>选择一个帖子</h3>
+        <p>从左侧列表选择一个帖子查看详情</p>
+      </div>`;
+  });
+});
+
+async function api(method, path, body) {
+  const url = `${BASE}/api/${currentDB}${path}`;
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(url, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || '请求失败');
+  return data;
+}
+
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type}`;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+async function refreshPosts() {
+  const list = document.getElementById('postList');
+  list.innerHTML = '<div style="padding:20px;text-align:center"><div class="skeleton" style="height:60px;margin-bottom:8px"></div><div class="skeleton" style="height:60px;margin-bottom:8px"></div><div class="skeleton" style="height:60px"></div></div>';
+  try {
+    posts = await api('GET', '/posts');
+    renderPostList();
+  } catch (e) {
+    list.innerHTML = `<div style="padding:32px;text-align:center;color:var(--rose);font-size:14px">加载失败: ${e.message}</div>`;
+  }
+}
+
+function renderPostList() {
+  const list = document.getElementById('postList');
+  const count = document.getElementById('postCount');
+  count.textContent = posts.length;
+  if (!posts.length) { list.innerHTML = ''; return; }
+  list.innerHTML = posts.map(p => {
+    const extKeys = p.extensions ? Object.keys(p.extensions) : [];
+    return `<div class="post-card${p.id === currentPostId ? ' active' : ''}" onclick="selectPost('${p.id}')">
+      <div class="post-card-title">${esc(p.title)}</div>
+      <div class="post-card-meta">
+        <span>${esc(p.author)}</span>
+        <span>${fmtTime(p.created_at)}</span>
+        <span>${(p.comments || []).length} 评论</span>
+      </div>
+      ${extKeys.length ? `<div class="post-card-ext">${extKeys.join(', ')}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+async function selectPost(id) {
+  currentPostId = id;
+  renderPostList();
+  const main = document.getElementById('mainContent');
+  main.innerHTML = '<div style="padding:40px"><div class="skeleton" style="height:32px;width:60%;margin-bottom:16px"></div><div class="skeleton" style="height:16px;width:40%;margin-bottom:24px"></div><div class="skeleton" style="height:100px;margin-bottom:16px"></div></div>';
+  try {
+    const post = await api('GET', `/posts/${id}`);
+    renderPost(post);
+  } catch (e) {
+    main.innerHTML = `<div style="padding:40px;text-align:center;color:var(--rose)">加载失败: ${e.message}</div>`;
+  }
+}
+
+function renderPost(post) {
+  const main = document.getElementById('mainContent');
+  const extJson = post.extensions && Object.keys(post.extensions).length
+    ? JSON.stringify(post.extensions, null, 2) : null;
+  const comments = post.comments || [];
+
+  const tree = buildCommentTree(comments);
+  main.innerHTML = `<div class="post-detail">
+    <div class="post-title">${esc(post.title)}</div>
+    <div class="post-meta">
+      <span>${esc(post.author)}</span>
+      <span>${fmtTime(post.created_at)}</span>
+      ${post.updated_at !== post.created_at ? `<span>编辑于 ${fmtTime(post.updated_at)}</span>` : ''}
+    </div>
+    <div class="post-content">${esc(post.content)}</div>
+    ${extJson ? `<div class="post-extensions"><h4>扩展字段</h4><div class="post-ext-json">${esc(extJson)}</div></div>` : ''}
+    <div class="post-actions">
+      <button class="btn btn-primary btn-sm reply-to-post-btn">回复</button>
+      <button class="btn btn-rose btn-sm del-post-btn" data-id="${post.id}">删除帖子</button>
+    </div>
+    <div class="comments-section">
+      <h3>评论 <span class="comment-count">${countComments(comments)}</span></h3>
+      ${tree.length ? renderCommentTree(tree, post.id) : '<div class="comment-empty">暂无评论，来写第一条吧</div>'}
+    </div>
+  </div>`;
+}
+
+function buildCommentTree(comments) {
+  const map = {};
+  const roots = [];
+  comments.forEach(c => { c.children = []; map[c.id] = c; });
+  comments.forEach(c => {
+    if (c.parent_id && map[c.parent_id]) map[c.parent_id].children.push(c);
+    else roots.push(c);
+  });
+  return roots;
+}
+
+function countComments(comments) {
+  let n = comments.length;
+  comments.forEach(c => { if (c.children) n += countComments(c.children); });
+  return n;
+}
+
+function renderCommentTree(roots, postId, depth = 0) {
+  return roots.map(c => `<div class="comment${depth > 0 ? ' comment-nested' : ''}">
+    <div class="comment-header">
+      <span class="comment-author">${esc(c.author)}</span>
+      ${c.reply_to_author ? `<span class="comment-replyto">${esc(c.reply_to_author)}</span>` : ''}
+      <span class="comment-time">${fmtTime(c.created_at)}</span>
+    </div>
+    <div class="comment-body">${esc(c.content)}</div>
+    <div class="comment-actions">
+      <button class="btn btn-outline btn-sm reply-btn" data-id="${c.id}" data-author="${escAttr(c.author)}">回复</button>
+      <button class="btn btn-rose btn-sm del-comment-btn" data-id="${c.id}">删除</button>
+    </div>
+    ${c.children && c.children.length ? renderCommentTree(c.children, postId, depth + 1) : ''}
+  </div>`).join('');
+}
+
+document.addEventListener('click', function(e) {
+  const replyBtn = e.target.closest('.reply-btn');
+  if (replyBtn) {
+    const id = replyBtn.dataset.id;
+    const author = replyBtn.dataset.author;
+    openAddComment(id, author);
+    return;
+  }
+  const delBtn = e.target.closest('.del-comment-btn');
+  if (delBtn) {
+    deleteComment(delBtn.dataset.id);
+    return;
+  }
+  const replyToPostBtn = e.target.closest('.reply-to-post-btn');
+  if (replyToPostBtn) {
+    openAddComment(null);
+    return;
+  }
+  const delPostBtn = e.target.closest('.del-post-btn');
+  if (delPostBtn) {
+    deletePost(delPostBtn.dataset.id);
+    return;
+  }
+});
+
+// Post CRUD
+function openCreatePost() {
+  document.getElementById('postModalTitle').textContent = '发帖';
+  document.getElementById('postSubmitBtn').textContent = '发布';
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postAuthor').value = '';
+  document.getElementById('postContent').value = '';
+  document.getElementById('postExtensions').value = '';
+  document.getElementById('postModal').classList.add('open');
+}
+
+async function submitPost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const author = document.getElementById('postAuthor').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  const extText = document.getElementById('postExtensions').value.trim();
+  if (!title) { toast('请输入标题', 'error'); return; }
+  if (!author) { toast('请输入作者', 'error'); return; }
+  if (!content) { toast('请输入内容', 'error'); return; }
+
+  let extensions = {};
+  if (extText) {
+    try { extensions = JSON.parse(extText); } catch { toast('扩展字段 JSON 格式错误', 'error'); return; }
+  }
+
+  try {
+    await api('POST', '/posts', { title, content, author, extensions });
+    toast('发布成功');
+    closeModal('postModal');
+    await refreshPosts();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function deletePost(id) {
+  if (!confirm('确定删除这篇帖子？')) return;
+  try {
+    await api('DELETE', `/posts/${id}`);
+    toast('已删除');
+    currentPostId = null;
+    document.getElementById('mainContent').innerHTML = `
+      <div class="welcome">
+        <div class="welcome-icon">~</div>
+        <h3>选择一个帖子</h3>
+        <p>从左侧列表选择一个帖子查看详情</p>
+      </div>`;
+    await refreshPosts();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// Comment CRUD
+function openAddComment(parentId, parentAuthor) {
+  replyingTo = parentId ? { id: parentId, author: parentAuthor } : null;
+  document.getElementById('commentAuthor').value = '';
+  document.getElementById('commentContent').value = '';
+
+  const info = document.getElementById('commentReplyInfo');
+  if (replyingTo) {
+    document.getElementById('commentModalTitle').textContent = '回复评论';
+    info.style.display = 'block';
+    info.textContent = `回复 @${parentAuthor}`;
+  } else {
+    document.getElementById('commentModalTitle').textContent = '评论';
+    info.style.display = 'none';
+  }
+  document.getElementById('commentModal').classList.add('open');
+}
+
+async function submitComment() {
+  const author = document.getElementById('commentAuthor').value.trim();
+  const content = document.getElementById('commentContent').value.trim();
+  if (!author) { toast('请输入作者', 'error'); return; }
+  if (!content) { toast('请输入内容', 'error'); return; }
+
+  const body = { content, author };
+  if (replyingTo) {
+    body.parent_id = replyingTo.id;
+    body.reply_to_author = replyingTo.author;
+    body.reply_to_comment_id = replyingTo.id;
+  }
+  try {
+    await api('POST', `/posts/${currentPostId}/comments`, body);
+    toast('回复成功');
+    closeModal('commentModal');
+    await selectPost(currentPostId);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function deleteComment(id) {
+  if (!confirm('确定删除此评论？')) return;
+  try {
+    await api('DELETE', `/comments/${id}`);
+    toast('评论已删除');
+    await selectPost(currentPostId);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// Utilities
+function esc(s) {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+function escAttr(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function fmtTime(t) {
+  if (!t) return '';
+  const d = new Date(t);
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// Init
+refreshPosts();
+</script>
+</body>
+</html>
