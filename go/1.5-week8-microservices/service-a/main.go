@@ -26,7 +26,7 @@ func main() {
 	var err error
 	reg, err = registry.New([]string{"localhost:2379"})
 	if err != nil {
-		log.Printf("⚠️  连接 etcd 失败: %v（将以无注册模式运行）", err)
+		log.Printf(" 连接 etcd 失败: %v（将以无注册模式运行）", err)
 	}
 	if reg != nil {
 		defer reg.Close()
@@ -36,7 +36,7 @@ func main() {
 	addr := ":" + *port
 	if reg != nil {
 		if err := reg.Register("service-a", "localhost"+addr, 10); err != nil {
-			log.Printf("⚠️  注册 service-a 失败: %v", err)
+			log.Printf(" 注册 service-a 失败: %v", err)
 		}
 	}
 
@@ -47,14 +47,14 @@ func main() {
 		w.Write([]byte("ok"))
 	})
 
-	fmt.Printf("🚀 Service A 启动在 %s\n", addr)
+	fmt.Printf(" Service A 启动在 %s\n", addr)
 
 	// 4. 优雅退出
 	go func() {
 		sigCh := make(chan os.Signal, 1)
 		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 		<-sigCh
-		fmt.Println("\n🛑 Service A 正在退出...")
+		fmt.Println("\n Service A 正在退出...")
 		if reg != nil {
 			reg.Deregister()
 		}

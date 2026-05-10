@@ -53,7 +53,7 @@ func main() {
 	var err error
 	reg, err = registry.New([]string{"localhost:2379"})
 	if err != nil {
-		log.Printf("⚠️  连接 etcd 失败: %v（将以纯缓存模式运行）", err)
+		log.Printf(" 连接 etcd 失败: %v（将以纯缓存模式运行）", err)
 	}
 	if reg != nil {
 		defer reg.Close()
@@ -65,11 +65,11 @@ func main() {
 	if reg != nil {
 		reg.Watch("service-a", func(addrs []string) {
 			setServiceAAddrs(addrs)
-			fmt.Printf("🔄 service-a 实例变更: %v\n", addrs)
+			fmt.Printf(" service-a 实例变更: %v\n", addrs)
 		})
 		reg.Watch("service-b", func(addrs []string) {
 			setServiceBAddrs(addrs)
-			fmt.Printf("🔄 service-b 实例变更: %v\n", addrs)
+			fmt.Printf(" service-b 实例变更: %v\n", addrs)
 		})
 	}
 
@@ -88,7 +88,7 @@ func main() {
 	})
 
 	addr := ":" + *port
-	fmt.Printf("🚀 Gateway 启动在 %s\n", addr)
+	fmt.Printf(" Gateway 启动在 %s\n", addr)
 	fmt.Println("可用路径:")
 	fmt.Println("  GET /hello           → Gateway → A")
 	fmt.Println("  GET /time            → Gateway → B")
@@ -98,7 +98,7 @@ func main() {
 		sigCh := make(chan os.Signal, 1)
 		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 		<-sigCh
-		fmt.Println("\n🛑 Gateway 正在退出...")
+		fmt.Println("\n Gateway 正在退出...")
 		os.Exit(0)
 	}()
 
@@ -107,14 +107,14 @@ func main() {
 
 func refreshAddrs() {
 	if reg == nil {
-		fmt.Println("📋 etcd 不可用，无缓存")
+		fmt.Println(" etcd 不可用，无缓存")
 		return
 	}
 	a := reg.DiscoverCached("service-a")
 	b := reg.DiscoverCached("service-b")
 	setServiceAAddrs(a)
 	setServiceBAddrs(b)
-	fmt.Printf("📋 当前服务: service-a=%v, service-b=%v\n", a, b)
+	fmt.Printf(" 当前服务: service-a=%v, service-b=%v\n", a, b)
 }
 
 // proxyToA 转发到 Service A，支持多实例重试

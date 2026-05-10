@@ -66,7 +66,7 @@ func (r *Registry) Register(serviceName, addr string, ttl int64) error {
 		fmt.Printf("[registry] %s 心跳通道关闭\n", serviceName)
 	}()
 
-	fmt.Printf("[registry] ✅ %s 注册成功 @ %s (ttl=%ds)\n", serviceName, addr, ttl)
+	fmt.Printf("[registry]  %s 注册成功 @ %s (ttl=%ds)\n", serviceName, addr, ttl)
 	return nil
 }
 
@@ -82,7 +82,7 @@ func (r *Registry) Deregister() error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("[registry] 🗑️  已注销 key: %s\n", r.key)
+		fmt.Printf("[registry]   已注销 key: %s\n", r.key)
 	}
 	return nil
 }
@@ -124,7 +124,7 @@ func (r *Registry) DiscoverCached(serviceName string) []string {
 	r.mu.RUnlock()
 
 	if len(cached) > 0 {
-		fmt.Printf("[registry] ⚠️  etcd 不可用，%s 使用缓存: %v\n", serviceName, cached)
+		fmt.Printf("[registry]   etcd 不可用，%s 使用缓存: %v\n", serviceName, cached)
 	}
 	return cached
 }
@@ -148,7 +148,7 @@ func (r *Registry) Watch(serviceName string, onChange func([]string)) {
 			// 保持当前缓存不变，等 etcd 恢复后 watch 会自动重连
 		}
 	}()
-	fmt.Printf("[registry] 👀 开始监听 %s 实例变化 (当前: %v)\n", serviceName, addrs)
+	fmt.Printf("[registry]  开始监听 %s 实例变化 (当前: %v)\n", serviceName, addrs)
 }
 
 // Close 关闭 etcd 连接
